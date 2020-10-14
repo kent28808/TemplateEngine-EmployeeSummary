@@ -45,11 +45,23 @@ function createManager(name, id, email) {
 }
 
 function createEngineer(name, id, email) {
-
+    inquirer.prompt([{
+        name: 'github',
+        type: 'input',
+        message: 'What is your github username?'
+    }]).then(({ github }) => {
+        return new Engineer(name, id, email, github)
+    })
 }
 
 function createIntern(name, id, email) {
-
+    inquirer.prompt([{
+        name: 'school',
+        type: 'input',
+        message: 'What school do you go to?'
+    }]).then(({ school }) => {
+        return new Intern(name, id, email, school)
+    })
 }
 
 function createEmployee(name, id, email) {
@@ -64,10 +76,10 @@ function selectRole(employees){
                 break;
 
             case 'Engineer':
-
+                employees.push(createEngineer(name, id, email)) 
                 break;
             case 'Intern':
-
+                employees.push(createIntern(name, id, email)) 
                 break;
 
             default:

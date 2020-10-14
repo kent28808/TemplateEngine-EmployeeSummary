@@ -11,100 +11,147 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 const Employee = require("./lib/Employee");
 
-const questions = [
-    {
-        name: "name",
-        type: "input",
-        message: "What is their name",
-    },
-    {
-        name: "id",
-        type: "input",
-        message: "What is their id?",
-    },
-    {
-        name: "email",
-        type: "input",
-        message: "What is their email?",
-    },
-    {
-        name: "role",
-        type: "list",
-        choices: ["Manager", "Engineer", "Intern",],
-        message: "What is their role?",
-    },];
+const team = [];
 
-function createManager(name, id, email) {
-    inquirer.prompt([{
-        name: 'officeNumber',
-        type: 'input',
-        message: 'What is your office number?'
-    }]).then(({ officeNumber }) => {
-        return new Manager(name, id, email, officeNumber)
+function repeat() {
+    inquirer
+        .prompt([
+            {
+                name: "type",
+                type: "list",
+                message: "what is the role you are adding?",
+                choices: [
+                    { name: "Manager" },
+                    { name: "Engineer" },
+                    { name: "Intern" },
+                    { name: "Quit" },
+
+                ]
+            }
+        ])
+        .then(res => {
+            switch (res.type) {
+                case "Manager":
+                    newManager();
+                    break;
+                case "Engineer":
+                    newEngineer();
+                    break;
+                case "Intern":
+                    newIntern();
+                    break;
+                case "Quit":
+                    generateHTML();
+                    break;
+            }
+        });
+}
+
+function newManager(){
+    inquirer.prompt([
+        {
+            name: "name",
+            type: "input",
+            message: "What is your name?"
+        },
+        {
+            name: "id",
+            type: "input",
+            message: "What is your id?"
+        },
+        {
+            name: "email",
+            type: "input",
+            message: "What is your email?"
+        },
+        {
+            name: "officeNumber",
+            type: "input",
+            message: "What is your office number?"
+        },
+    ]).then(input => {
+        var name = input.name;
+        var id = input.id;
+        var email = input.email;
+        var number = input.officeNumber;
+        var manager = new Manager(name, id, email, number);
+        team.push(manager);
+        repeat();
     })
 }
 
-function createEngineer(name, id, email) {
-    inquirer.prompt([{
-        name: 'github',
-        type: 'input',
-        message: 'What is your github username?'
-    }]).then(({ github }) => {
-        return new Engineer(name, id, email, github)
+function newEngineer(){
+    inquirer.prompt([
+        {
+            name: "name",
+            type: "input",
+            message: "What is your name?"
+        },
+        {
+            name: "id",
+            type: "input",
+            message: "What is your id?"
+        },
+        {
+            name: "email",
+            type: "input",
+            message: "What is your email?"
+        },
+        {
+            name: "github",
+            type: "input",
+            message: "What is your github username?"
+        },
+    ]).then(input => {
+        var name = input.name;
+        var id = input.id;
+        var email = input.email;
+        var github = input.github;
+        var engineer = new Engineer(name, id, email, github);
+        team.push(engineer);
+        repeat();
     })
 }
 
-function createIntern(name, id, email) {
-    inquirer.prompt([{
-        name: 'school',
-        type: 'input',
-        message: 'What school do you go to?'
-    }]).then(({ school }) => {
-        return new Intern(name, id, email, school)
+function newIntern(){
+    inquirer.prompt([
+        {
+            name: "name",
+            type: "input",
+            message: "What is your name?"
+        },
+        {
+            name: "id",
+            type: "input",
+            message: "What is your id?"
+        },
+        {
+            name: "email",
+            type: "input",
+            message: "What is your email?"
+        },
+        {
+            name: "school",
+            type: "input",
+            message: "What school do you go to?"
+        },
+    ]).then(input => {
+        var name = input.name;
+        var id = input.id;
+        var email = input.email;
+        var school = input.school;
+        var intern = new Intern(name, id, email, school);
+        team.push(intern);
+        repeat();
     })
 }
 
-function createEmployee(name, id, email) {
-    return new Employee(name, id, email)
-    
+
+function generateHTML(){
+    fs.writeFileSync(outputPath, render(team), "utf-8")
 }
 
-function selectRole(employees){
-    inquirer.prompt(questions).then(({ role, name, id, email }) => {
-        switch (role) {
-            case 'Manager':
-                employees.push(createManager(name, id, email)) 
-                break;
-
-            case 'Engineer':
-                employees.push(createEngineer(name, id, email)) 
-                break;
-            case 'Intern':
-                employees.push(createIntern(name, id, email)) 
-                break;
-
-            default:
-                employees.push(createEmployee(name, id, email)) 
-                break;
-        }
-    })
-}
-
-function main() {
-    const employees = []
-    selectRole(employees);
-    inquirer.prompt([{name:'repeat', type:'confirm',  message: 'Would you like to add another team member?'}]).then(answers => {
-        if(answers.repeat){
-            selectRole(employees);
-        }else{
-            render(employees);
-        }
-    })
-}
-main()
-
-
-
+repeat();
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)

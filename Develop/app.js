@@ -66,6 +66,7 @@ function createIntern(name, id, email) {
 
 function createEmployee(name, id, email) {
     return new Employee(name, id, email)
+    
 }
 
 function selectRole(employees){
@@ -100,6 +101,10 @@ function main() {
         }
     })
 }
+main()
+
+
+
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)

@@ -9,6 +9,7 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const Employee = require("./lib/Employee");
 
 const questions = [
     {
@@ -33,6 +34,60 @@ const questions = [
         message: "What is their role?",
     },];
 
+function createManager(name, id, email) {
+    inquirer.prompt([{
+        name: 'officeNumber',
+        type: 'input',
+        message: 'What is your office number?'
+    }]).then(({ officeNumber }) => {
+        return new Manager(name, id, email, officeNumber)
+    })
+}
+
+function createEngineer(name, id, email) {
+
+}
+
+function createIntern(name, id, email) {
+
+}
+
+function createEmployee(name, id, email) {
+    return new Employee(name, id, email)
+}
+
+function selectRole(employees){
+    inquirer.prompt(questions).then(({ role, name, id, email }) => {
+        switch (role) {
+            case 'Manager':
+                employees.push(createManager(name, id, email)) 
+                break;
+
+            case 'Engineer':
+
+                break;
+            case 'Intern':
+
+                break;
+
+            default:
+                employees.push(createEmployee(name, id, email)) 
+                break;
+        }
+    })
+}
+
+function main() {
+    const employees = []
+    selectRole(employees);
+    inquirer.prompt([{name:'repeat', type:'confirm',  message: 'Would you like to add another team member?'}]).then(answers => {
+        if(answers.repeat){
+            selectRole(employees);
+        }else{
+            render(employees);
+        }
+    })
+}
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
@@ -56,3 +111,4 @@ const questions = [
 // for further information. Be sure to test out each class and verify it generates an
 // object with the correct structure and methods. This structure will be crucial in order
 // for the provided `render` function to work! ```
+

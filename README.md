@@ -5,7 +5,7 @@
 
 This application will prompt the user with a series of questions about the Manager, Engineer, and Intern roles.  The user will be able to add as much team members as necessary. All information enter will be organized and displayed in a card type format on a webpage.
 
-![Readme Generator](Assets/screenshot)
+![Readme Generator](https://github.com/kent28808/TemplateEngine-EmployeeSummary/blob/main/Develop/screenshot.png)
 
 ## Table of Contents
 
